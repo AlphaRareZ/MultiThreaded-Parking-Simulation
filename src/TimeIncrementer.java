@@ -9,14 +9,15 @@ public class TimeIncrementer extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                // Your increment logic
                 Thread.sleep(1000);
-                parkingLot.incrementTime();
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                parkingLot.incrementTime();// Example sleep
             }
+        } catch (InterruptedException e) {
+            // Handle interruption and exit
+            Thread.currentThread().interrupt(); // Preserve the interrupted status
         }
     }
 

@@ -15,7 +15,6 @@ public class ParkingLot {
     // this function puts the car in an empty slot and returns the number of occupied spots
     public synchronized int acquire(Car car) {
         capacity--;
-        occupied++;
         String arrivalString = String.format("Car %s from Gate %s arrived at time %s", car.getCarId(), car.getGate().getGateId(), time);
         if (capacity < 0) {
             String waitingString = String.format("Car %s from Gate %s waiting for a spot", car.getCarId(), car.getGate().getGateId());
@@ -26,21 +25,20 @@ public class ParkingLot {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            notifyAll();
+//            notifyAll();
         } else {
             System.out.println(arrivalString);
         }
-        return occupied;
+        return ++occupied;
     }
 
     public synchronized int release(Car car){
         capacity++;
-        occupied--;
         if (capacity <= 0) {
             // انقل دي في ال Gate
 //            String s = String.format("Car %s from Gate %s left after %s units of time %s", car.getCarId(), car.getGate().getGateId(), car.getStayTime());
-            notifyAll();
+            notify();
         }
-        return occupied;
+        return --occupied;
     }
 }
